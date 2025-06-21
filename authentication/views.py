@@ -3,7 +3,9 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from .forms import SignupForm, LoginForm
 from .models import Profile
-from students.models import Student  # For fetching student profile
+from students.models import Student
+from teachers.models import Teacher
+from subjects.models import Subject
 
 # -------------------------
 # Signup View
@@ -21,14 +23,16 @@ def signup_view(request):
             user.profile.save()
 
             if role == 'student':
-                login(request, user)  # auto login
+                login(request, user)
                 return redirect('complete_student_profile')
+            elif role == 'teacher':
+                login(request, user)
+                return redirect('complete_teacher_profile')
 
             return redirect('login')
     else:
         form = SignupForm()
     return render(request, 'authentication/signup.html', {'form': form})
-
 
 
 # -------------------------
@@ -45,17 +49,23 @@ def login_view(request):
             if user is not None:
                 login(request, user)
 
-                # Redirect based on role
                 if hasattr(user, 'profile'):
                     if user.profile.role == 'student':
+                        if not Student.objects.filter(user=user).exists():
+                            return redirect('complete_student_profile')
                         return redirect('student_dashboard')
+
                     elif user.profile.role == 'teacher':
+                        if not Teacher.objects.filter(user=user).exists():
+                            return redirect('complete_teacher_profile')
                         return redirect('teacher_dashboard')
-                return redirect('home')
+
+                return redirect('home')  # fallback
             else:
                 form.add_error(None, 'Invalid username or password.')
     else:
         form = LoginForm()
+
     return render(request, 'authentication/login.html', {'form': form})
 
 
@@ -76,7 +86,7 @@ def student_dashboard(request):
     try:
         student_profile = Student.objects.get(user=request.user)
     except Student.DoesNotExist:
-        student_profile = None
+        return redirect('complete_student_profile')
     return render(request, 'dashboard/student.html', {'student': student_profile})
 
 
@@ -85,11 +95,15 @@ def student_dashboard(request):
 # -------------------------
 @login_required
 def teacher_dashboard(request):
-    return render(request, 'authentication/teacher.html')
+    try:
+        teacher = Teacher.objects.get(user=request.user)
+    except Teacher.DoesNotExist:
+        teacher = None
+    return render(request, 'dashboard/teacher.html', {'teacher': teacher})
 
 
 # -------------------------
-# Role-based Redirect (optional)
+# Role-based Redirect
 # -------------------------
 @login_required
 def role_based_redirect(request):

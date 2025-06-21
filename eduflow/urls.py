@@ -8,6 +8,8 @@ urlpatterns = [
     path('auth/', include('authentication.urls')),
     path('', include('pages.urls')),
     path('students/', include('students.urls')),
+    path('teachers/', include('teachers.urls')),
+
 ]
 
 # ✅ For profile images & uploaded media

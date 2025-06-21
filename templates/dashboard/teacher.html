@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+
+  <!-- Welcome Message -->
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>👨‍🏫 Welcome, {{ teacher.full_name }}!</h2>
+  </div>
+
+  <p>You are logged in as a <strong>Teacher</strong>.</p>
+
+  <!-- Profile Section -->
+  <div class="row mt-4">
+    <!-- Profile Image -->
+    <div class="col-md-4 text-center">
+      {% if teacher.profile_image %}
+        <img src="{{ teacher.profile_image.url }}" class="img-thumbnail rounded-circle mb-2" width="180" alt="Profile Image">
+      {% else %}
+        <img src="https://via.placeholder.com/150?text=No+Image" class="img-thumbnail rounded-circle mb-2" alt="No Image">
+      {% endif %}
+    </div>
+
+    <!-- Contact + Address -->
+    <div class="col-md-8">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <p class="mb-2"><strong>📞 Contact:</strong> {{ teacher.contact|default:"Not Provided" }}</p>
+          <p class="mb-0"><strong>🏠 Address:</strong> {{ teacher.address|default:"Not Provided" }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Assigned Subjects -->
+  <hr class="mt-5">
+  <h4>📚 Assigned Subjects</h4>
+  {% if subjects %}
+    <ul class="list-group">
+      {% for subject in subjects %}
+        <li class="list-group-item">
+          {{ subject.name }} - {{ subject.course }} (Sem {{ subject.semester }})
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p class="text-muted">No subjects assigned yet.</p>
+  {% endif %}
+</div>
+{% endblock %}
