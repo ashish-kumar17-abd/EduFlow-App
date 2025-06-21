@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>👤 Student Details</h2>
+    <hr>
+    <p><strong>Name:</strong> {{ student.name }}</p>
+    <p><strong>Roll Number:</strong> {{ student.roll_number }}</p>
+    <p><strong>Course:</strong> {{ student.course }}</p>
+    <p><strong>Semester:</strong> {{ student.semester }}</p>
+    <p><strong>Username:</strong> {{ student.user.username }}</p>
+    
+    <a href="{% url 'student_list' %}" class="btn btn-secondary mt-3">← Back to List</a>
+</div>
+{% endblock %}

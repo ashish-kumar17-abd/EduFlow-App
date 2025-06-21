@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <div class="text-center mt-5">
+    <h1>Welcome to EduFlow 🚀</h1>
+    <p>Please <a href="{% url 'signup' %}?role=student">Signup</a> or <a href="{% url 'login' %}">Login</a></p>
+  </div>
+{% endblock %}

@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card shadow p-4">
+
+        {% if student.profile_image %}
+        <div class="text-center mb-4">
+            <img src="{{ student.profile_image.url }}" alt="Profile Image" class="rounded-circle shadow"
+                style="width: 150px; height: 150px; object-fit: cover;">
+        </div>
+        {% endif %}
+
+        <h2 class="text-center mb-4">🎓 Welcome, {{ student.full_name }}!</h2>
+
+        <div class="row justify-content-center text-start">
+            <!-- Left Column: Tighter width -->
+            <div class="col-md-5 col-lg-4">
+                <p><span class="fw-bold text-purple">🆔 Roll Number:</span> {{ student.roll_number }}</p>
+                <p><span class="fw-bold text-primary">📚 Course:</span> {{ student.course }}</p>
+                <p><span class="fw-bold text-warning">🧑‍🎓 Semester:</span> {{ student.semester }}</p>
+                <p><span class="fw-bold text-danger">📞 Contact:</span> {{ student.contact }}</p>
+            </div>
+
+            <!-- Right Column: Tighter width with small left offset -->
+            <div class="col-md-5 col-lg-4 ms-md-2">
+                <p><span class="fw-bold text-success">🏠 Address:</span> {{ student.address }}</p>
+                <p><span class="fw-bold text-info">🔬 Gender:</span> {{ student.gender }}</p>
+                <p><span class="fw-bold text-pink">🎂 DOB:</span> {{ student.date_of_birth }}</p>
+                <p><span class="fw-bold text-secondary">📅 Admission:</span> {{ student.admission_date }}</p>
+            </div>
+        </div>
+
+
+
+        <hr>
+        <div class="text-center text-success mt-3">
+            ✅ You are logged in as a <strong>Student</strong>.
+        </div>
+    </div>
+</div>
+{% endblock %}

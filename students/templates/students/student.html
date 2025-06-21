@@ -1,0 +1,41 @@
+<!-- templates/dashboard/student.html -->
+
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+  <div class="card shadow">
+    <div class="card-header bg-success text-white">
+      <h3 class="mb-0">🎓 Student Dashboard</h3>
+    </div>
+    <div class="card-body">
+      {% if student %}
+        <div class="row">
+          <div class="col-md-8">
+            <p><strong>👤 Full Name:</strong> {{ student.full_name }}</p>
+            <p><strong>📛 Roll Number:</strong> {{ student.roll_number }}</p>
+            <p><strong>📚 Course:</strong> {{ student.course }}</p>
+            <p><strong>📅 Semester:</strong> {{ student.semester }}</p>
+            <p><strong>📞 Contact:</strong> {{ student.contact }}</p>
+            <p><strong>🏠 Address:</strong> {{ student.address }}</p>
+            <p><strong>🚻 Gender:</strong> {{ student.gender }}</p>
+            <p><strong>🎂 Date of Birth:</strong> {{ student.date_of_birth }}</p>
+            <p><strong>🗓️ Admission Date:</strong> {{ student.admission_date }}</p>
+          </div>
+          <div class="col-md-4 text-center">
+            {% if student.profile_image %}
+              <img src="{{ student.profile_image.url }}" class="img-fluid rounded-circle shadow" width="150" height="150" alt="Profile Image">
+            {% else %}
+              <div class="text-muted">No profile image</div>
+            {% endif %}
+          </div>
+        </div>
+      {% else %}
+        <div class="alert alert-warning">
+          Your profile is incomplete. Please contact the admin.
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}
