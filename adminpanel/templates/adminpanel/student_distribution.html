@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block title %}Student Distribution - EduFlow{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <h2 class="mb-4">📊 Student Distribution</h2>
+
+  <table class="table table-bordered text-center">
+    <thead class="table-dark">
+      <tr>
+        <th>Course</th>
+        <th>Semester</th>
+        <th>No. of Students</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in distribution %}
+      <tr>
+        <td>{{ row.course }}</td>
+        <td>{{ row.semester }}</td>
+        <td>{{ row.count }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <div class="mt-3">
+    <a href="{% url 'admin_dashboard' %}" class="btn btn-secondary">← Back to Dashboard</a>
+  </div>
+</div>
+{% endblock %}

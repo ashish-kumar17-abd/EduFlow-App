@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% block title %}Filter Students - EduFlow{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <h3 class="mb-4">🎓 Filter Students by Course & Semester</h3>
+
+  <form method="get" class="row g-3 mb-4">
+    <div class="col-md-5">
+      <label class="form-label">Select Course</label>
+      <select name="course" class="form-select" required onchange="this.form.submit()">
+        <option value="">-- Select Course --</option>
+        {% for c in courses %}
+          <option value="{{ c }}" {% if c == selected_course %}selected{% endif %}>{{ c }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    {% if selected_course %}
+    <div class="col-md-5">
+      <label class="form-label">Select Semester</label>
+      <select name="semester" class="form-select" required onchange="this.form.submit()">
+        <option value="">-- Select Semester --</option>
+        {% for i in semesters %}
+          <option value="{{ i }}" {% if i|stringformat:"s" == selected_semester %}selected{% endif %}>Semester {{ i }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    {% endif %}
+  </form>
+
+  {% if students %}
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Roll No.</th>
+        <th>Email</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for s in students %}
+      <tr>
+        <td>{{ s.full_name }}</td>
+        <td>{{ s.roll_number }}</td>
+        <td>{{ s.user.email }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% elif selected_course and selected_semester %}
+    <div class="alert alert-warning">No students found for this combination.</div>
+  {% endif %}
+</div>
+{% endblock %}

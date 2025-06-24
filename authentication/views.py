@@ -36,7 +36,7 @@ def signup_view(request):
 
 
 # -------------------------
-# Login View
+# Login View (Updated)
 # -------------------------
 def login_view(request):
     if request.method == 'POST':
@@ -49,6 +49,11 @@ def login_view(request):
             if user is not None:
                 login(request, user)
 
+                # ✅ Superuser redirect
+                if user.is_superuser:
+                    return redirect('admin_dashboard')
+
+                # ✅ Redirect based on profile role
                 if hasattr(user, 'profile'):
                     if user.profile.role == 'student':
                         if not Student.objects.filter(user=user).exists():
@@ -108,6 +113,8 @@ def teacher_dashboard(request):
 @login_required
 def role_based_redirect(request):
     user = request.user
+    if user.is_superuser:
+        return redirect('admin_dashboard')
     if hasattr(user, 'profile'):
         if user.profile.role == 'student':
             return redirect('student_dashboard')
