@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load custom_tags %}
 
 {% block content %}
 <div class="container mt-5">
@@ -14,7 +15,6 @@
         <h2 class="text-center mb-4">🎓 Welcome, {{ student.full_name }}!</h2>
 
         <div class="row justify-content-center text-start">
-            <!-- Left Column: Tighter width -->
             <div class="col-md-5 col-lg-4">
                 <p><span class="fw-bold text-purple">🆔 Roll Number:</span> {{ student.roll_number }}</p>
                 <p><span class="fw-bold text-primary">📚 Course:</span> {{ student.course }}</p>
@@ -22,7 +22,6 @@
                 <p><span class="fw-bold text-danger">📞 Contact:</span> {{ student.contact }}</p>
             </div>
 
-            <!-- Right Column: Tighter width with small left offset -->
             <div class="col-md-5 col-lg-4 ms-md-2">
                 <p><span class="fw-bold text-success">🏠 Address:</span> {{ student.address }}</p>
                 <p><span class="fw-bold text-info">🔬 Gender:</span> {{ student.gender }}</p>
@@ -31,12 +30,52 @@
             </div>
         </div>
 
-
-
         <hr>
         <div class="text-center text-success mt-3">
             ✅ You are logged in as a <strong>Student</strong>.
         </div>
     </div>
+
+    <!-- ✅ Attendance Section -->
+    {% if attendance_dates and attendance_data %}
+    <div class="card shadow mt-5 p-4">
+        <h4 class="mb-3 text-center">📅 Your Attendance Summary</h4>
+
+        <div class="table-responsive">
+            <table class="table table-bordered text-center align-middle">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Subject</th>
+                        {% for date in attendance_dates %}
+                        <th>{{ date }}</th>
+                        {% endfor %}
+                        <th>✅ Present</th>
+                        <th>📘 Total</th>
+                        <th>📊 %</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for subject in attendance_data %}
+                    <tr>
+                        <td class="fw-semibold text-start">{{ subject.name }}</td>
+                        {% for date in attendance_dates %}
+                        {% with attendance_data|get_item:subject.id|get_item:date as status %}
+                        <td class="{% if status == 'Present' %}bg-success text-white{% elif status == 'Absent' %}bg-danger text-white{% endif %}">
+                            {{ status|default:"-" }}
+                        </td>
+                        {% endwith %}
+                        {% endfor %}
+                        {% with summary_stats|get_item:subject.id as stats %}
+                        <td>{{ stats.present }}</td>
+                        <td>{{ stats.total }}</td>
+                        <td><strong>{{ stats.percentage }}%</strong></td>
+                        {% endwith %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% endif %}
 </div>
 {% endblock %}
