@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% load custom_tags %}
+
+{% block content %}
+<div class="container mt-5">
+  <h3>Mark Attendance</h3>
+
+  <!-- Subject & Date Filter Form -->
+  <form method="POST" id="filterForm">
+    {% csrf_token %}
+    <div class="mb-3">
+      <label>Select Subject</label>
+      <select name="subject" class="form-select" required onchange="document.getElementById('filterForm').submit();">
+        <option value="">-- Choose Subject --</option>
+        {% for subject in subjects %}
+          <option value="{{ subject.id }}" {% if selected_subject and subject.id == selected_subject.id %}selected{% endif %}>
+            {{ subject.name }}
+          </option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="mb-3">
+      <label>Select Date</label>
+      <input type="date" name="date" class="form-control" required
+             value="{{ selected_date|default:today|date:'Y-m-d' }}"
+             onchange="document.getElementById('filterForm').submit();">
+    </div>
+  </form>
+
+  {% if students %}
+  <!-- Attendance Form -->
+  <form method="POST">
+    {% csrf_token %}
+    <input type="hidden" name="subject" value="{{ selected_subject.id }}">
+    <input type="hidden" name="date" value="{{ selected_date|date:'Y-m-d' }}">
+
+    <table class="table table-bordered mt-4">
+      <thead>
+        <tr>
+          <th>Student</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for student in students %}
+        <tr>
+          <td>{{ student.full_name }}</td>
+          <td>
+            {% with status=attendance_map|get_item:student.id %}
+              <div class="d-flex align-items-center gap-2">
+                <select name="status_{{ student.id }}" class="form-select">
+                  <option value="">--</option>
+                  <option value="Present" {% if status == "Present" %}selected{% endif %}>Present</option>
+                  <option value="Absent" {% if status == "Absent" %}selected{% endif %}>Absent</option>
+                </select>
+
+                {% if status %}
+                <a href="{% url 'unmark_attendance' %}?student={{ student.id }}&subject={{ selected_subject.id }}&date={{ selected_date }}"
+                   class="btn btn-sm btn-danger"
+                   onclick="return confirm('Are you sure you want to delete this attendance?')">
+                  🗑
+                </a>
+                {% endif %}
+              </div>
+            {% endwith %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <button type="submit" class="btn btn-primary">Submit Attendance</button>
+  </form>
+  {% endif %}
+</div>
+{% endblock %}

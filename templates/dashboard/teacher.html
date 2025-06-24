@@ -43,8 +43,17 @@
         </li>
       {% endfor %}
     </ul>
+
+    <!-- ✅ Mark Attendance Button -->
+    <div class="mt-4">
+      <a href="{% url 'mark_attendance' %}" class="btn btn-primary">
+        📋 Mark Attendance
+      </a>
+    </div>
+
   {% else %}
     <p class="text-muted">No subjects assigned yet.</p>
   {% endif %}
+
 </div>
 {% endblock %}

@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% load custom_tags %}
+
+{% block content %}
+<div class="container mt-5">
+  <h3 class="mb-4">📊 Attendance Report</h3>
+
+  <!-- Filter Form -->
+  <form method="GET" class="row g-3 mb-4">
+    <div class="col-md-3">
+      <label class="form-label">Course:</label>
+      <input type="text" class="form-control" name="course" value="{{ selected_course }}">
+    </div>
+    <div class="col-md-3">
+      <label class="form-label">Semester:</label>
+      <input type="number" class="form-control" name="semester" value="{{ selected_semester }}">
+    </div>
+    <div class="col-md-4">
+      <label class="form-label">Subject:</label>
+      <select name="subject" class="form-select" required>
+        <option value="">-- Select Subject --</option>
+        {% for sub in subjects %}
+          {% if not selected_course or sub.course == selected_course %}
+            {% if not selected_semester or sub.semester|stringformat:'s' == selected_semester %}
+              <option value="{{ sub.id }}" {% if sub.id|stringformat:'s' == selected_subject_id %}selected{% endif %}>
+                {{ sub.name }}
+              </option>
+            {% endif %}
+          {% endif %}
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-2 d-flex align-items-end">
+      <button type="submit" class="btn btn-primary w-100">View Report</button>
+    </div>
+  </form>
+
+  {% if students %}
+  <div class="table-responsive">
+    <table class="table table-bordered table-striped align-middle text-center">
+      <thead class="table-dark">
+        <tr>
+          <th>👤 Student</th>
+          {% for date in attendance_dates %}
+          <th>{{ date }}</th>
+          {% endfor %}
+          <th>✅ Present</th>
+          <th>📘 Total</th>
+          <th>📊 %</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for student in students %}
+        <tr>
+          <td class="fw-semibold text-start">{{ student.full_name }}</td>
+
+          {% for date in attendance_dates %}
+            {% with attendance_data|get_item:student.id|get_item:date as status %}
+            <td>
+              <form method="POST" action="{% url 'edit_attendance' %}">
+                {% csrf_token %}
+                <input type="hidden" name="student_id" value="{{ student.id }}">
+                <input type="hidden" name="subject_id" value="{{ selected_subject_id }}">
+                <input type="hidden" name="date" value="{{ date|date:'Y-m-d' }}">
+
+                <select name="status" class="form-select form-select-sm" onchange="this.form.submit()"
+                  style="{% if status == 'Present' %}background-color: #198754; color: white;
+                         {% elif status == 'Absent' %}background-color: #dc3545; color: white;
+                         {% endif %}">
+                  <option value="">--</option>
+                  <option value="Present" {% if status == "Present" %}selected{% endif %}>Present</option>
+                  <option value="Absent" {% if status == "Absent" %}selected{% endif %}>Absent</option>
+                </select>
+              </form>
+            </td>
+            {% endwith %}
+          {% endfor %}
+
+          {% with summary_stats|get_item:student.id as stats %}
+            <td>{{ stats.present }}</td>
+            <td>{{ stats.total }}</td>
+            <td><strong>{{ stats.percentage }}%</strong></td>
+          {% endwith %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}
