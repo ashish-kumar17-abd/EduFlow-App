@@ -11,7 +11,6 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.contrib import messages
 
-
 # ================== MARK ATTENDANCE ==================
 
 @login_required
@@ -42,7 +41,6 @@ def mark_attendance(request):
                     course__iexact=(selected_subject.course or '').strip()
                 )
 
-                # ✅ Only save attendance if status fields are present
                 if any(key.startswith('status_') for key in request.POST.keys()):
                     Attendance.objects.filter(subject=selected_subject, date=selected_date).delete()
 
@@ -56,7 +54,9 @@ def mark_attendance(request):
                                 status=status,
                                 marked_by=teacher,
                             )
-                    return redirect('mark_attendance')
+
+                    messages.success(request, 'Attendance marked successfully!')
+                    return HttpResponseRedirect(reverse('mark_attendance'))
 
             except Subject.DoesNotExist:
                 selected_subject = None
@@ -69,7 +69,6 @@ def mark_attendance(request):
         'selected_date': selected_date,
         'today': timezone.now().date()
     })
-
 
 
 # ================== ATTENDANCE REPORT ==================
@@ -88,8 +87,8 @@ def attendance_report(request):
 
     students = []
     attendance_dates = []
-    attendance_data = defaultdict(dict)  # {student_id: {date: status}}
-    summary_stats = {}  # {student_id: {present, total, percentage}}
+    attendance_data = defaultdict(dict)
+    summary_stats = {}
 
     if selected_subject_id:
         try:
