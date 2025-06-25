@@ -51,9 +51,12 @@
           {% endif %}
 
           {% if user.is_superuser %}
-            <!-- ✅ Admin Dashboard Link -->
+            <!-- ✅ Admin Only Links -->
             <li class="nav-item">
               <a class="nav-link" href="{% url 'admin_dashboard' %}">🏠 Admin Dashboard</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'admin_teacher_list' %}">👨‍🏫 Manage Teachers</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="{% url 'attendance_report' %}">📊 Attendance Report</a>

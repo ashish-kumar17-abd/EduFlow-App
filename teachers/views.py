@@ -4,6 +4,7 @@ from .models import Teacher
 from subjects.models import Subject
 from django.contrib.auth.decorators import login_required
 
+# ✅ Complete Profile
 @login_required
 def complete_teacher_profile(request):
     if Teacher.objects.filter(user=request.user).exists():
@@ -22,7 +23,7 @@ def complete_teacher_profile(request):
     return render(request, 'teachers/complete_profile.html', {'form': form})
 
 
-
+# ✅ Edit Profile
 @login_required
 def edit_teacher_profile(request):
     teacher = Teacher.objects.get(user=request.user)
@@ -33,9 +34,11 @@ def edit_teacher_profile(request):
             return redirect('teacher_dashboard')
     else:
         form = TeacherForm(instance=teacher)
+
     return render(request, 'teachers/edit_profile.html', {'form': form})
 
 
+# ✅ Teacher Dashboard
 @login_required
 def teacher_dashboard(request):
     try:

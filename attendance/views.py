@@ -18,21 +18,23 @@ def mark_attendance(request):
     teacher = Teacher.objects.get(user=request.user)
     subjects = Subject.objects.filter(teacher=teacher)
 
-    students = None
+    students = []
     selected_subject = None
     selected_date = timezone.now().date()
     attendance_map = {}
 
-    if request.method == 'POST':
-        subject_id = request.POST.get('subject')
-        date_str = request.POST.get('date')
+    if request.method in ['POST', 'GET']:
+        subject_id = request.POST.get('subject') or request.GET.get('subject')
+        date_str = request.POST.get('date') or request.GET.get('date')
 
+        # Date parse
         if date_str:
             try:
                 selected_date = datetime.strptime(date_str, '%Y-%m-%d').date()
-            except ValueError:
+            except:
                 selected_date = timezone.now().date()
 
+        # Subject select
         if subject_id:
             try:
                 selected_subject = Subject.objects.get(id=subject_id)
@@ -41,7 +43,8 @@ def mark_attendance(request):
                     course__iexact=(selected_subject.course or '').strip()
                 )
 
-                if any(key.startswith('status_') for key in request.POST.keys()):
+                # ✅ If Attendance is being marked (actual submission)
+                if request.method == 'POST' and any(k.startswith('status_') for k in request.POST.keys()):
                     Attendance.objects.filter(subject=selected_subject, date=selected_date).delete()
 
                     for student in students:
@@ -55,8 +58,8 @@ def mark_attendance(request):
                                 marked_by=teacher,
                             )
 
-                    messages.success(request, 'Attendance marked successfully!')
-                    return HttpResponseRedirect(reverse('mark_attendance'))
+                    messages.success(request, "Attendance marked successfully!")
+                    return redirect('mark_attendance')
 
             except Subject.DoesNotExist:
                 selected_subject = None
@@ -65,10 +68,10 @@ def mark_attendance(request):
         'subjects': subjects,
         'students': students,
         'selected_subject': selected_subject,
-        'attendance_map': attendance_map,
         'selected_date': selected_date,
         'today': timezone.now().date()
     })
+
 
 
 # ================== ATTENDANCE REPORT ==================
