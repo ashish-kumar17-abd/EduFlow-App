@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+  <h3>📘 {{ course }} - Semesters</h3>
+  <ul class="list-group">
+    {% for s in semesters %}
+    <li class="list-group-item">
+      <a href="{% url 'admin_timetable_detail' course s %}">Semester {{ s }}</a>
+    </li>
+    {% endfor %}
+  </ul>
+</div>
+{% endblock %}

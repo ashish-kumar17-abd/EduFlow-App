@@ -1,97 +1,108 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <title>{% block title %}EduFlow{% endblock %}</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    {% block extra_head %}{% endblock %}
+  <meta charset="UTF-8">
+  <title>{% block title %}EduFlow{% endblock %}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  {% block extra_head %}{% endblock %}
 </head>
+
 <body>
 
-<!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-  <div class="container">
-    <a class="navbar-brand" href="/">EduFlow</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-      <span class="navbar-toggler-icon"></span>
-    </button>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+      <a class="navbar-brand" href="/">EduFlow</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
 
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav ms-auto">
-        {% if user.is_authenticated %}
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          {% if user.is_authenticated %}
           <li class="nav-item">
             <a class="nav-link disabled">👋 Hello, {{ user.username }}</a>
           </li>
 
           {% if user.profile.role == 'student' %}
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'student_dashboard' %}">📋 Dashboard</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'edit_student_profile' %}">✏️ Edit Profile</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'student_attendance' %}">📊 My Attendance</a>
-            </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'student_dashboard' %}">📋 Dashboard</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'edit_student_profile' %}">✏️ Edit Profile</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'student_attendance' %}">📊 My Attendance</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'student_timetable' %}">📅 My Timetable</a>
+          </li>
 
           {% elif user.profile.role == 'teacher' %}
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'teacher_dashboard' %}">📋 Dashboard</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'edit_teacher_profile' %}">✏️ Edit Profile</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'attendance_report' %}">📊 Attendance Report</a>
-            </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'teacher_dashboard' %}">📋 Dashboard</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'edit_teacher_profile' %}">✏️ Edit Profile</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'attendance_report' %}">📊 Attendance Report</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'teacher_timetable' %}">📅 My Timetable</a>
+          </li>
           {% endif %}
 
           {% if user.is_superuser %}
-            <!-- ✅ Admin Only Links -->
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'admin_dashboard' %}">🏠 Admin Dashboard</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'admin_teacher_list' %}">👨‍🏫 Manage Teachers</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="{% url 'attendance_report' %}">📊 Attendance Report</a>
-            </li>
+          <!-- ✅ Admin Only Links -->
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'admin_dashboard' %}">🏠 Admin Dashboard</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'admin_teacher_list' %}">👨‍🏫 Manage Teachers</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'attendance_report' %}">📊 Attendance Report</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'admin_timetable_courses' %}">
+              📘 Manage Timetable
+            </a>
+          </li>
           {% endif %}
 
           <li class="nav-item">
             <a class="nav-link text-danger" href="{% url 'logout' %}">🚪 Logout</a>
           </li>
-        {% else %}
+          {% else %}
           <li class="nav-item">
             <a class="nav-link" href="{% url 'login' %}">🔐 Login</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="{% url 'signup' %}?role=student">📝 Register</a>
           </li>
-        {% endif %}
-      </ul>
+          {% endif %}
+        </ul>
+      </div>
     </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="container mt-4">
+    {% block content %}{% endblock %}
   </div>
-</nav>
 
-<!-- Main Content -->
-<div class="container mt-4">
-  {% block content %}{% endblock %}
-</div>
+  <!-- Footer -->
+  <footer class="bg-light text-center py-3 mt-5">
+    <p class="mb-0">&copy; 2025 EduFlow. All rights reserved.</p>
+  </footer>
 
-<!-- Footer -->
-<footer class="bg-light text-center py-3 mt-5">
-  <p class="mb-0">&copy; 2025 EduFlow. All rights reserved.</p>
-</footer>
-
-<!-- Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-{% block extra_scripts %}{% endblock %}
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  {% block extra_scripts %}{% endblock %}
 
 </body>
 </html>

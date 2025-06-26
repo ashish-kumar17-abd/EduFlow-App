@@ -52,3 +52,36 @@ def teacher_dashboard(request):
         'teacher': teacher,
         'subjects': subjects,
     })
+
+
+
+
+@login_required
+def admin_teacher_list(request):
+    if not request.user.is_superuser:
+        messages.error(request, "Access denied.")
+        return redirect('login')
+
+    course = request.GET.get('course', '').strip()
+    semester = request.GET.get('semester', '').strip()
+    subject_id = request.GET.get('subject', '').strip()
+
+    subjects = Subject.objects.all()
+    if course:
+        subjects = subjects.filter(course__iexact=course)
+    if semester:
+        subjects = subjects.filter(semester=semester)
+
+    teachers = Teacher.objects.all().distinct()
+    if subject_id:
+        teachers = teachers.filter(subject__id=subject_id)
+    elif course or semester:
+        teachers = teachers.filter(subject__in=subjects).distinct()
+
+    return render(request, 'teachers/admin_teacher_list.html', {
+        'teachers': teachers,
+        'subjects': Subject.objects.all(),
+        'selected_course': course,
+        'selected_semester': semester,
+        'selected_subject': subject_id,
+    })

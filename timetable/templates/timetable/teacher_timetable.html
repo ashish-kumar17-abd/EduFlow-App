@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+  <h3>📘 {{ teacher_name }} - Your Timetable</h3>
+
+  {% if grouped_by_day %}
+    {% for day, entries in grouped_by_day.items %}
+      <h5 class="text-primary mt-3">{{ day }}</h5>
+      <table class="table table-bordered mb-4">
+        <thead>
+          <tr>
+            <th>Time</th>
+            <th>Subject</th>
+            <th>Course</th>
+            <th>Semester</th>
+            <th>Room</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for t in entries %}
+          <tr>
+            <td>{{ t.start_time }} - {{ t.end_time }}</td>
+            <td>{{ t.subject.name }}</td>
+            <td>{{ t.course }}</td>
+            <td>{{ t.semester }}</td>
+            <td>{{ t.room }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% endfor %}
+  {% else %}
+    <p class="text-danger">⚠️ No timetable found for you.</p>
+  {% endif %}
+</div>
+{% endblock %}
