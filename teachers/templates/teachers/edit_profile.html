@@ -1,24 +1,31 @@
 {% extends 'base.html' %}
+{% load form_filters %}
+
+{% block title %}Edit Profile | EduFlow{% endblock %}
 
 {% block content %}
 <div class="container mt-5">
   <div class="card shadow">
     <div class="card-header bg-warning text-dark">
-      <h4 class="mb-0">✏️ Edit Your Profile</h4>
+      <h4 class="mb-0">✏️ Edit Teacher Profile</h4>
     </div>
     <div class="card-body">
-      <form method="post" enctype="multipart/form-data">
+      <form method="post" enctype="multipart/form-data" novalidate>
         {% csrf_token %}
-        {% for field in form %}
-          <div class="mb-3">
+        <div class="row">
+          {% for field in form %}
+          <div class="mb-3 col-md-6">
             <label class="form-label">{{ field.label }}</label>
-            {{ field }}
+            {{ field|add_class:"form-control" }}
             {% if field.errors %}
               <div class="text-danger small">{{ field.errors }}</div>
             {% endif %}
           </div>
-        {% endfor %}
-        <button type="submit" class="btn btn-primary">💾 Save Changes</button>
+          {% endfor %}
+        </div>
+        <div class="d-grid">
+          <button type="submit" class="btn btn-primary">💾 Save Changes</button>
+        </div>
       </form>
     </div>
   </div>

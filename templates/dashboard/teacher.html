@@ -1,59 +1,65 @@
 {% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Teacher Dashboard | EduFlow{% endblock %}
 
 {% block content %}
 <div class="container mt-5">
 
-  <!-- Welcome Message -->
-  <div class="d-flex justify-content-between align-items-center mb-3">
-    <h2>👨‍🏫 Welcome, {{ teacher.full_name }}!</h2>
+  <!-- Welcome Section -->
+  <div class="text-center mb-5">
+    <h2>👨‍🏫 Welcome, <span class="text-primary">{{ teacher.full_name }}</span>!</h2>
+    <p class="lead">You are logged in as a <strong>Teacher</strong>.</p>
   </div>
 
-  <p>You are logged in as a <strong>Teacher</strong>.</p>
-
-  <!-- Profile Section -->
-  <div class="row mt-4">
-    <!-- Profile Image -->
+  <!-- Profile Info -->
+  <div class="row justify-content-center">
     <div class="col-md-4 text-center">
-      {% if teacher.profile_image %}
-        <img src="{{ teacher.profile_image.url }}" class="img-thumbnail rounded-circle mb-2" width="180" alt="Profile Image">
-      {% else %}
-        <img src="https://via.placeholder.com/150?text=No+Image" class="img-thumbnail rounded-circle mb-2" alt="No Image">
-      {% endif %}
-    </div>
-
-    <!-- Contact + Address -->
-    <div class="col-md-8">
-      <div class="card shadow-sm">
+      <div class="card shadow-sm border-0">
         <div class="card-body">
-          <p class="mb-2"><strong>📞 Contact:</strong> {{ teacher.contact|default:"Not Provided" }}</p>
-          <p class="mb-0"><strong>🏠 Address:</strong> {{ teacher.address|default:"Not Provided" }}</p>
+          {% if teacher.profile_image %}
+            <img src="{{ teacher.profile_image.url }}" class="rounded-circle mb-3" width="150" height="150" style="object-fit: cover; border: 4px solid #dee2e6;">
+          {% else %}
+            <img src="{% static 'img/default-user.png' %}" class="rounded-circle mb-3" width="150" height="150" style="object-fit: cover;">
+          {% endif %}
+          <h5 class="card-title mb-1">{{ teacher.full_name }}</h5>
+          <p class="text-muted mb-2">👩‍🏫 Teacher</p>
+          <hr>
+          <p class="mb-1"><i class="bi bi-telephone-fill text-danger me-2"></i><strong>Contact:</strong> {{ teacher.contact|default:"Not Provided" }}</p>
+          <p><i class="bi bi-house-door-fill text-primary me-2"></i><strong>Address:</strong> {{ teacher.address|default:"Not Provided" }}</p>
         </div>
       </div>
     </div>
   </div>
 
   <!-- Assigned Subjects -->
-  <hr class="mt-5">
-  <h4>📚 Assigned Subjects</h4>
-  {% if subjects %}
-    <ul class="list-group">
-      {% for subject in subjects %}
-        <li class="list-group-item">
-          {{ subject.name }} - {{ subject.course }} (Sem {{ subject.semester }})
-        </li>
-      {% endfor %}
-    </ul>
+  <div class="mt-5">
+    <h4 class="mb-3">📚 Assigned Subjects</h4>
 
-    <!-- ✅ Mark Attendance Button -->
-    <div class="mt-4">
-      <a href="{% url 'mark_attendance' %}" class="btn btn-primary">
-        📋 Mark Attendance
-      </a>
-    </div>
+    {% if subjects %}
+      <div class="row row-cols-1 row-cols-md-2 g-3">
+        {% for subject in subjects %}
+          <div class="col">
+            <div class="card border-0 shadow-sm h-100">
+              <div class="card-body">
+                <h6 class="card-title mb-1">{{ subject.name }}</h6>
+                <p class="text-muted mb-0">{{ subject.course }} – Semester {{ subject.semester }}</p>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
 
-  {% else %}
-    <p class="text-muted">No subjects assigned yet.</p>
-  {% endif %}
+      <!-- Mark Attendance Button -->
+      <div class="text-center mt-4">
+        <a href="{% url 'mark_attendance' %}" class="btn btn-primary btn-lg">
+          📋 Mark Attendance
+        </a>
+      </div>
+    {% else %}
+      <p class="text-muted">No subjects assigned yet.</p>
+    {% endif %}
+  </div>
 
 </div>
 {% endblock %}

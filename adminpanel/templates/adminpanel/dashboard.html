@@ -2,67 +2,54 @@
 {% block title %}Admin Dashboard - EduFlow{% endblock %}
 
 {% block content %}
-<div class="container mt-5">
-    <h2 class="mb-4">🛠️ Admin Dashboard</h2>
+<div class="container-fluid">
+  <h3 class="mb-4">Admin Dashboard</h3>
 
-    <!-- Summary Cards -->
-    <div class="row">
-        <div class="col-md-3">
-            <div class="card text-white bg-primary mb-3">
-                <div class="card-body">
-                    <h5 class="card-title">👨‍🎓 Students</h5>
-                    <p class="card-text display-6">{{ students_count }}</p>
-                </div>
-            </div>
+  <div class="row g-4">
+    <div class="col-md-3">
+      <div class="card shadow-sm border-0">
+        <div class="card-body text-center">
+          <h6 class="text-muted">Students</h6>
+          <h2>{{ students_count }}</h2>
         </div>
-        <div class="col-md-3">
-            <div class="card text-white bg-success mb-3">
-                <div class="card-body">
-                    <h5 class="card-title">👨‍🏫 Teachers</h5>
-                    <p class="card-text display-6">{{ teachers_count }}</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card text-white bg-warning mb-3">
-                <div class="card-body">
-                    <h5 class="card-title">📚 Subjects</h5>
-                    <p class="card-text display-6">{{ subjects_count }}</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card text-white bg-danger mb-3">
-                <div class="card-body">
-                    <h5 class="card-title">🗓️ Attendance Today</h5>
-                    <p class="card-text display-6">{{ attendance_today }}</p>
-                </div>
-            </div>
-        </div>
+      </div>
     </div>
-
-    <!-- Admin Shortcuts -->
-    <hr>
-    <h4 class="mt-4">⚙️ Quick Admin Actions</h4>
-    <div class="d-flex flex-wrap gap-3 mt-3">
-        <a href="{% url 'admin:students_student_add' %}" class="btn btn-primary">➕ Add Student</a>
-        <a href="{% url 'admin:teachers_teacher_add' %}" class="btn btn-success">➕ Add Teacher</a>
-        <a href="{% url 'admin:subjects_subject_add' %}" class="btn btn-warning text-dark">➕ Add Subject</a>
-        <a href="{% url 'admin:attendance_attendance_changelist' %}" class="btn btn-danger">📋 View Attendance</a>
-        <a href="{% url 'student_distribution' %}" class="btn btn-info">📊 View Student Distribution</a>
-        <a href="{% url 'student_filter' %}" class="btn btn-secondary mt-4">🔍 Filter Students</a>
-
-
+    <div class="col-md-3">
+      <div class="card shadow-sm border-0">
+        <div class="card-body text-center">
+          <h6 class="text-muted">Teachers</h6>
+          <h2>{{ teachers_count }}</h2>
+        </div>
+      </div>
     </div>
-    <!-- Manage Users -->
-    <hr>
-    <h4 class="mt-4">👥 Manage Records</h4>
-    <div class="d-flex flex-wrap gap-3 mt-3">
-        <a href="{% url 'admin:students_student_changelist' %}" class="btn btn-outline-primary">👨‍🎓 Manage
-            Students</a>
-        <a href="{% url 'admin:teachers_teacher_changelist' %}" class="btn btn-outline-success">👨‍🏫 Manage
-            Teachers</a>
+    <div class="col-md-3">
+      <div class="card shadow-sm border-0">
+        <div class="card-body text-center">
+          <h6 class="text-muted">Subjects</h6>
+          <h2>{{ subjects_count }}</h2>
+        </div>
+      </div>
     </div>
-    
+    <div class="col-md-3">
+      <div class="card shadow-sm border-0">
+        <div class="card-body text-center">
+          <h6 class="text-muted">Today’s Attendance</h6>
+          <h2>{{ attendance_today }}</h2>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="my-4">
+
+  <h5>Quick Admin Actions</h5>
+  <div class="d-flex flex-wrap gap-2 mt-2">
+    <a href="{% url 'admin:students_student_add' %}" class="btn btn-outline-primary">Add Student</a>
+    <a href="{% url 'admin:teachers_teacher_add' %}" class="btn btn-outline-success">Add Teacher</a>
+    <a href="{% url 'admin:subjects_subject_add' %}" class="btn btn-outline-warning">Add Subject</a>
+    <a href="{% url 'admin:attendance_attendance_changelist' %}" class="btn btn-outline-danger">View Attendance</a>
+    <a href="{% url 'student_distribution' %}" class="btn btn-outline-info">Student Distribution</a>
+    <a href="{% url 'student_filter' %}" class="btn btn-outline-secondary">Filter Students</a>
+  </div>
 </div>
 {% endblock %}

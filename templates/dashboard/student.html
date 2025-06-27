@@ -2,48 +2,51 @@
 {% load custom_tags %}
 
 {% block content %}
-<div class="container mt-5">
-    <div class="card shadow p-4">
+<div class="container py-4">
+
+    <!-- 🧾 Profile Card -->
+    <div class="card border-0 shadow-sm rounded-4 p-4 mb-5" style="background-color: #f7f9fc;">
 
         {% if student.profile_image %}
         <div class="text-center mb-4">
-            <img src="{{ student.profile_image.url }}" alt="Profile Image" class="rounded-circle shadow"
-                style="width: 150px; height: 150px; object-fit: cover;">
+            <img src="{{ student.profile_image.url }}" alt="Profile Image"
+                class="rounded-circle shadow-sm border border-2"
+                style="width: 140px; height: 140px; object-fit: cover;">
         </div>
         {% endif %}
 
-        <h2 class="text-center mb-4">🎓 Welcome, {{ student.full_name }}!</h2>
+        <h2 class="text-center fw-semibold mb-4 text-dark">🎓 Welcome, {{ student.full_name }}!</h2>
 
         <div class="row justify-content-center text-start">
             <div class="col-md-5 col-lg-4">
-                <p><span class="fw-bold text-purple">🆔 Roll Number:</span> {{ student.roll_number }}</p>
-                <p><span class="fw-bold text-primary">📚 Course:</span> {{ student.course }}</p>
-                <p><span class="fw-bold text-warning">🧑‍🎓 Semester:</span> {{ student.semester }}</p>
-                <p><span class="fw-bold text-danger">📞 Contact:</span> {{ student.contact }}</p>
+                <p><strong class="text-muted">🆔 Roll Number:</strong> {{ student.roll_number }}</p>
+                <p><strong class="text-muted">📚 Course:</strong> {{ student.course }}</p>
+                <p><strong class="text-muted">🧑‍🎓 Semester:</strong> {{ student.semester }}</p>
+                <p><strong class="text-muted">📞 Contact:</strong> {{ student.contact }}</p>
             </div>
 
             <div class="col-md-5 col-lg-4 ms-md-2">
-                <p><span class="fw-bold text-success">🏠 Address:</span> {{ student.address }}</p>
-                <p><span class="fw-bold text-info">🔬 Gender:</span> {{ student.gender }}</p>
-                <p><span class="fw-bold text-pink">🎂 DOB:</span> {{ student.date_of_birth }}</p>
-                <p><span class="fw-bold text-secondary">📅 Admission:</span> {{ student.admission_date }}</p>
+                <p><strong class="text-muted">🏠 Address:</strong> {{ student.address }}</p>
+                <p><strong class="text-muted">🔬 Gender:</strong> {{ student.gender }}</p>
+                <p><strong class="text-muted">🎂 DOB:</strong> {{ student.date_of_birth }}</p>
+                <p><strong class="text-muted">📅 Admission:</strong> {{ student.admission_date }}</p>
             </div>
         </div>
 
-        <hr>
-        <div class="text-center text-success mt-3">
-            ✅ You are logged in as a <strong>Student</strong>.
+        <hr class="mt-4">
+        <div class="text-center text-success mt-2 fw-medium">
+            ✅ You are logged in as a <span class="fw-bold">Student</span>.
         </div>
     </div>
 
-    <!-- ✅ Attendance Section -->
+    <!-- 📅 Attendance Section -->
     {% if attendance_dates and attendance_data %}
-    <div class="card shadow mt-5 p-4">
-        <h4 class="mb-3 text-center">📅 Your Attendance Summary</h4>
+    <div class="card border-0 shadow-sm rounded-4 p-4" style="background-color: #f7f9fc;">
+        <h4 class="text-center mb-4 fw-semibold text-dark">📅 Your Attendance Summary</h4>
 
         <div class="table-responsive">
             <table class="table table-bordered text-center align-middle">
-                <thead class="table-dark">
+                <thead class="table-secondary">
                     <tr>
                         <th>Subject</th>
                         {% for date in attendance_dates %}
@@ -60,7 +63,7 @@
                         <td class="fw-semibold text-start">{{ subject.name }}</td>
                         {% for date in attendance_dates %}
                         {% with attendance_data|get_item:subject.id|get_item:date as status %}
-                        <td class="{% if status == 'Present' %}bg-success text-white{% elif status == 'Absent' %}bg-danger text-white{% endif %}">
+                        <td class="{% if status == 'Present' %}bg-success text-white{% elif status == 'Absent' %}bg-danger text-white{% else %}text-muted{% endif %}">
                             {{ status|default:"-" }}
                         </td>
                         {% endwith %}

@@ -1,34 +1,48 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="container mt-4">
-  <h3>📘 {{ course }} - Semester {{ semester }} Timetable</h3>
+<div class="container mt-5">
+
+  <h3 class="text-center fw-bold mb-4">
+    {{ course }} – Semester {{ semester }} Timetable 🗓️
+  </h3>
 
   {% if grouped_by_day %}
     {% for day, entries in grouped_by_day.items %}
-      <h5 class="text-primary mt-3">{{ day }}</h5>
-      <table class="table table-bordered mb-4">
-        <thead>
-          <tr>
-            <th>Time</th>
-            <th>Subject</th>
-            <th>Teacher</th>
-            <th>Room</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for t in entries %}
-          <tr>
-            <td>{{ t.start_time }} - {{ t.end_time }}</td>
-            <td>{{ t.subject.name }}</td>
-            <td>{{ t.teacher.full_name }}</td>
-            <td>{{ t.room }}</td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
+    <div class="card border-0 shadow-sm mb-4">
+      <div class="card-header bg-light text-dark fw-semibold fs-5 border-bottom">
+        {{ day }}
+      </div>
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table table-striped table-hover mb-0 text-center align-middle">
+            <thead class="table-secondary">
+              <tr>
+                <th style="width: 20%;">Time</th>
+                <th style="width: 30%;">Subject</th>
+                <th style="width: 30%;">Teacher</th>
+                <th style="width: 20%;">Room</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for t in entries %}
+              <tr>
+                <td class="text-muted">{{ t.start_time }} - {{ t.end_time }}</td>
+                <td class="fw-medium">{{ t.subject.name }}</td>
+                <td>{{ t.teacher.full_name }}</td>
+                <td>{{ t.room }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
     {% endfor %}
   {% else %}
-    <p class="text-danger">⚠️ No timetable found for your semester.</p>
+    <div class="alert alert-warning text-center mt-4">
+      ⚠️ No timetable found for your semester.
+    </div>
   {% endif %}
+
 </div>
 {% endblock %}

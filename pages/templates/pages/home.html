@@ -1,8 +1,52 @@
 {% extends 'base.html' %}
 
+{% block title %}Welcome | EduFlow{% endblock %}
+
 {% block content %}
-  <div class="text-center mt-5">
-    <h1>Welcome to EduFlow 🚀</h1>
-    <p>Please <a href="{% url 'signup' %}?role=student">Signup</a> or <a href="{% url 'login' %}">Login</a></p>
+<div class="container py-5 text-center">
+
+  <!-- Brand Logo and Tagline -->
+  <div class="mb-4">
+    <h1 class="display-4 fw-bold">🎓 Welcome to <span class="text-primary">EduFlow</span></h1>
+    <p class="lead text-muted">A modern ERP system to manage Students, Teachers, Attendance, Timetables, and more — all in one place.</p>
   </div>
+
+  <!-- Illustrative Icon or Image -->
+  <img src="https://cdn-icons-png.flaticon.com/512/3135/3135755.png" alt="EduFlow illustration" class="img-fluid mb-4" style="max-height: 240px;">
+
+  <!-- CTA Buttons -->
+  <div class="d-flex justify-content-center gap-3 mb-4">
+    <a href="{% url 'login' %}" class="btn btn-success btn-lg px-4">🔐 Login</a>
+    <a href="{% url 'signup' %}?role=student" class="btn btn-outline-primary btn-lg px-4">📝 Register</a>
+  </div>
+
+  <!-- Features Highlight -->
+  <div class="row mt-5">
+    <div class="col-md-4">
+      <div class="card border-0 shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title">👨‍🏫 Teachers Panel</h5>
+          <p class="card-text text-muted">View assigned subjects, mark attendance, and manage classes.</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4 mt-3 mt-md-0">
+      <div class="card border-0 shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title">👨‍🎓 Student Dashboard</h5>
+          <p class="card-text text-muted">Track attendance, view timetable and course details in one place.</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4 mt-3 mt-md-0">
+      <div class="card border-0 shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title">🛠 Admin Control</h5>
+          <p class="card-text text-muted">Easily manage users, timetables, courses, and attendance records.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
 {% endblock %}
