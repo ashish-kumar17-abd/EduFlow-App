@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Courses | EduFlow{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3>📚 Courses</h3>
+        <a href="{% url 'add_course' %}" class="btn btn-primary">➕ Add Course</a>
+    </div>
+
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-success">{{ message }}</div>
+    {% endfor %}
+    {% endif %}
+
+    <table class="table table-bordered table-hover">
+        <thead class="table-light">
+            <tr>
+                <th>Name</th>
+                <th>Code</th>
+                <th>Duration</th>
+                <th>Total Semesters</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for course in courses %}
+            <tr>
+                <td>{{ course.name }}</td>
+                <td>{{ course.code }}</td>
+                <td>{{ course.duration }} years</td>
+                <td>{{ course.total_semesters }}</td>
+                <td>
+                    <a href="{% url 'edit_course' course.id %}" class="btn btn-sm btn-warning">✏️ Edit</a>
+                    <a href="{% url 'view_semesters' course.id %}" class="btn btn-sm btn-secondary">📆 Semesters</a>
+                    <a href="{% url 'delete_course' course.id %}" class="btn btn-sm btn-danger">🗑️ Delete</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5" class="text-center">No courses found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

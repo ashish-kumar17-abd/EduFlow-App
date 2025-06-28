@@ -7,6 +7,7 @@
       <a href="{% url 'admin_dashboard' %}" class="{% if request.path == '/adminpanel/dashboard/' %}active{% endif %}">🏠 Dashboard</a>
       <a href="{% url 'admin_teacher_list' %}">👨‍🏫 Manage Teachers</a>
       <a href="{% url 'admin_timetable_courses' %}">📘 Manage Timetable</a>
+      <a href="{% url 'course_list' %}" class="{% if request.path == '/courses/' %}active{% endif %}">📚 Manage Courses</a>
       <a href="{% url 'attendance_report' %}">📊 Attendance Report</a>
 
     {% elif user.profile.role == 'teacher' %}

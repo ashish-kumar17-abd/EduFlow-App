@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}{{ course.code }} Semesters | EduFlow{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h3 class="mb-4">📆 {{ course.name }} - Semesters</h3>
+
+    {% if semesters %}
+    <ul class="list-group">
+        {% for semester in semesters %}
+        <li class="list-group-item">
+            <strong>Semester {{ semester.number }}:</strong> {{ semester.title }}
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <div class="alert alert-info">No semesters found for this course.</div>
+    {% endif %}
+
+    <a href="{% url 'course_list' %}" class="btn btn-secondary mt-4">⬅️ Back to Courses</a>
+</div>
+{% endblock %}
