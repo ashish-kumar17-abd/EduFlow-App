@@ -1,8 +1,10 @@
 {% extends 'base.html' %}
 {% load custom_tags %}
+{% block title %}Timetable | EduFlow{% endblock %}
+
 {% block content %}
 <div class="container mt-4">
-  <h3>📅 Manage Timetable</h3>
+  <h3>📅 Timetable ({{ course }} - Semester {{ semester }})</h3>
   <a href="{% url 'add_timetable' %}" class="btn btn-success mb-3">➕ Add Timetable</a>
 
   <table class="table table-bordered text-center">
@@ -24,7 +26,9 @@
                 {% if entry %}
                   <strong>{{ entry.subject.name }}</strong><br>
                   {{ entry.teacher.full_name }}<br>
-                  {{ entry.room }}
+                  {{ entry.room }}<br>
+                  <a href="{% url 'edit_timetable' entry.id %}" class="btn btn-sm btn-warning mt-1">✏️</a>
+                  <a href="{% url 'delete_timetable' entry.id %}" class="btn btn-sm btn-danger mt-1">🗑️</a>
                 {% else %}
                   -
                 {% endif %}

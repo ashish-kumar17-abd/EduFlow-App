@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load custom_tags %}
+
+{% block content %}
+<div class="container mt-5">
+  <div class="card shadow-sm rounded">
+    <div class="card-body p-4">
+      <h3 class="mb-4 text-primary"><i class="bi bi-calendar-plus"></i> Add Timetable Entry</h3>
+
+      <form method="POST">
+        {% csrf_token %}
+        <div class="row g-3">
+          <div class="col-md-6">
+            {{ form.course.label_tag }} {{ form.course|add_class:"form-control" }}
+          </div>
+          <div class="col-md-6">
+            {{ form.semester.label_tag }} {{ form.semester|add_class:"form-control" }}
+          </div>
+          <div class="col-md-6">
+            {{ form.subject.label_tag }} {{ form.subject|add_class:"form-select" }}
+          </div>
+          <div class="col-md-6">
+            {{ form.teacher.label_tag }} {{ form.teacher|add_class:"form-select" }}
+          </div>
+          <div class="col-md-6">
+            {{ form.day.label_tag }} {{ form.day|add_class:"form-select" }}
+          </div>
+          <div class="col-md-6">
+            {{ form.room.label_tag }} {{ form.room|add_class:"form-control" }}
+          </div>
+          <div class="col-md-6">
+            {{ form.start_time.label_tag }} {{ form.start_time|add_class:"form-control" }}
+          </div>
+          <div class="col-md-6">
+            {{ form.end_time.label_tag }} {{ form.end_time|add_class:"form-control" }}
+          </div>
+        </div>
+
+        <div class="mt-4 d-flex justify-content-between">
+          <a href="{% url 'admin_timetable_courses' %}" class="btn btn-secondary">← Back</a>
+          <button type="submit" class="btn btn-success">💾 Save Entry</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

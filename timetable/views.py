@@ -51,14 +51,6 @@ def add_timetable(request):
         return redirect('admin_timetable_list')
     return render(request, 'timetable/admin_timetable_form.html', {'form': form})
 
-@staff_member_required
-def get_subjects_ajax(request):
-    course = request.GET.get('course')
-    semester = request.GET.get('semester')
-    if course and semester:
-        subjects = Subject.objects.filter(course__iexact=course, semester=semester).values('id', 'name')
-        return JsonResponse(list(subjects), safe=False)
-    return JsonResponse([], safe=False)
 
 @staff_member_required
 def timetable_courses(request):
@@ -77,27 +69,23 @@ from django.db.models.functions import Lower
 
 @staff_member_required
 def timetable_detail(request, course, semester):
-    from collections import defaultdict
-    from timetable.models import Timetable
-
-    # Sanitize input
-    course = course.strip()
-
-    # Fetch relevant entries
     entries = Timetable.objects.filter(course__iexact=course, semester=semester).order_by('day', 'start_time')
-    print(">>> Filtered entries count:", entries.count())
+    time_slots = sorted(set((t.start_time, t.end_time) for t in entries))
+    days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
 
-    # Group by day
-    grouped_by_day = defaultdict(list)
-    for entry in entries:
-        grouped_by_day[entry.day].append(entry)
+    timetable_grid = defaultdict(dict)
+    for t in entries:
+        slot = (t.start_time, t.end_time)
+        timetable_grid[t.day][slot] = t
 
-    # Final render
-    return render(request, 'timetable/admin_timetable_detail.html', {
+    return render(request, 'timetable/admin_timetable_list.html', {
+        'time_slots': time_slots,
+        'days': days,
+        'timetable_grid': timetable_grid,
         'course': course,
         'semester': semester,
-        'grouped_by_day': dict(grouped_by_day),  # ensure it's a dict
     })
+
 
 
 
@@ -139,6 +127,19 @@ def student_timetable(request):
         'semester': student.semester,
     })
 
+
+@staff_member_required
+def get_subjects_ajax(request):
+    course = request.GET.get('course')
+    semester = request.GET.get('semester')
+    if course and semester:
+        try:
+            semester = int(semester)
+            subjects = Subject.objects.filter(course__iexact=course, semester=semester).values('id', 'name')
+            return JsonResponse(list(subjects), safe=False)
+        except:
+            return JsonResponse([], safe=False)
+    return JsonResponse([], safe=False)
 
 
 

@@ -1,99 +1,87 @@
 {% extends 'base.html' %}
+{% load static %}
+
 {% block content %}
-<div class="container mt-4">
-  <h3>➕ Add Timetable Entry</h3>
+<div class="container mt-5">
+  <div class="card shadow-lg rounded p-4">
+    <h3 class="mb-4 text-primary fw-bold">➕ Add Timetable Entry</h3>
 
-  {% if form.errors %}
-    <div class="alert alert-danger">
-      <strong>Form has errors:</strong>
-      <ul>
-        {% for field in form %}
-          {% for error in field.errors %}
-            <li><strong>{{ field.label }}:</strong> {{ error }}</li>
-          {% endfor %}
-        {% endfor %}
-        {% for error in form.non_field_errors %}
-          <li>{{ error }}</li>
-        {% endfor %}
-      </ul>
-    </div>
-  {% endif %}
+    <form method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div class="row g-4">
+        <div class="col-md-6">
+          <label class="form-label">📚 Course</label>
+          {{ form.course }}
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">🎓 Semester</label>
+          {{ form.semester }}
+        </div>
 
-  <form method="POST">
-    {% csrf_token %}
+        <div class="col-md-12">
+          <label class="form-label">📖 Subject</label>
+          {{ form.subject }}
+        </div>
 
-    <div class="mb-3">
-      <label for="id_course">Course:</label>
-      {{ form.course }}
-    </div>
+        <div class="col-md-12">
+          <label class="form-label">👨‍🏫 Teacher</label>
+          {{ form.teacher }}
+        </div>
 
-    <div class="mb-3">
-      <label for="id_semester">Semester:</label>
-      {{ form.semester }}
-    </div>
+        <div class="col-md-4">
+          <label class="form-label">📅 Day</label>
+          {{ form.day }}
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">⏰ Start Time</label>
+          {{ form.start_time }}
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">⏳ End Time</label>
+          {{ form.end_time }}
+        </div>
 
-    <div class="mb-3">
-      <label for="id_subject">Subject:</label>
-      {{ form.subject }}
-    </div>
+        <div class="col-md-6">
+          <label class="form-label">🏫 Room</label>
+          {{ form.room }}
+        </div>
+      </div>
 
-    <div class="mb-3">
-      <label for="id_teacher">Teacher:</label>
-      {{ form.teacher }}
-    </div>
-
-    <div class="mb-3">
-      <label for="id_day">Day:</label>
-      {{ form.day }}
-    </div>
-
-    <div class="mb-3">
-      <label for="id_start_time">Start Time:</label>
-      {{ form.start_time }}
-    </div>
-
-    <div class="mb-3">
-      <label for="id_end_time">End Time:</label>
-      {{ form.end_time }}
-    </div>
-
-    <div class="mb-3">
-      <label for="id_room">Room:</label>
-      {{ form.room }}
-    </div>
-
-    <button type="submit" class="btn btn-primary">Save</button>
-    <a href="{% url 'admin_timetable_list' %}" class="btn btn-secondary">Back</a>
-  </form>
-
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      const courseInput = document.getElementById('id_course');
-      const semesterInput = document.getElementById('id_semester');
-      const subjectSelect = document.getElementById('id_subject');
-
-      function fetchSubjects() {
-        const course = courseInput.value;
-        const semester = semesterInput.value;
-
-        if (course && semester) {
-          fetch(`/timetable/get-subjects/?course=${course}&semester=${semester}`)
-            .then(response => response.json())
-            .then(data => {
-              subjectSelect.innerHTML = '<option value="">Select Subject</option>';
-              data.forEach(subject => {
-                const option = document.createElement('option');
-                option.value = subject.id;
-                option.text = subject.name;
-                subjectSelect.appendChild(option);
-              });
-            });
-        }
-      }
-
-      courseInput.addEventListener('input', fetchSubjects);
-      semesterInput.addEventListener('input', fetchSubjects);
-    });
-  </script>
+      <div class="mt-4 d-flex justify-content-between">
+        <a href="{% url 'admin_timetable_list' %}" class="btn btn-outline-secondary">🔙 Back</a>
+        <button type="submit" class="btn btn-success">💾 Save</button>
+      </div>
+    </form>
+  </div>
 </div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  $(document).ready(function () {
+    function updateSubjects() {
+      const course = $('[name="course"]').val();
+      const semester = $('[name="semester"]').val();
+
+      if (course && semester) {
+        $.ajax({
+          url: "{% url 'get_subjects_ajax' %}",
+          data: {
+            'course': course,
+            'semester': semester
+          },
+          success: function (data) {
+            const subjectField = $('[name="subject"]');
+            subjectField.empty();
+            subjectField.append(`<option value="">---------</option>`);
+            data.forEach(function (subject) {
+              subjectField.append(`<option value="${subject.id}">${subject.name}</option>`);
+            });
+          }
+        });
+      }
+    }
+
+    $('[name="course"], [name="semester"]').on('change keyup', updateSubjects);
+  });
+</script>
 {% endblock %}

@@ -1,11 +1,14 @@
 {% extends 'base.html' %}
+{% block title %}Manage Timetable | EduFlow{% endblock %}
+
 {% block content %}
 <div class="container mt-4">
-  <h3>📘 Courses</h3>
+  <h3>📘 Select Course</h3>
   <ul class="list-group">
     {% for c in courses %}
-    <li class="list-group-item">
-      <a href="{% url 'admin_timetable_semesters' c %}">{{ c }}</a>
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+      {{ c }}
+      <a href="{% url 'admin_timetable_semesters' c %}" class="btn btn-sm btn-primary">View Semesters</a>
     </li>
     {% endfor %}
   </ul>

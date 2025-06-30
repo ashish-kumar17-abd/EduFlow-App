@@ -3,6 +3,12 @@ from .forms import TeacherForm
 from .models import Teacher
 from subjects.models import Subject
 from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from .models import Teacher
+from .forms import TeacherForm
+
 
 # ✅ Complete Profile
 @login_required
@@ -56,7 +62,6 @@ def teacher_dashboard(request):
 
 
 
-@login_required
 def admin_teacher_list(request):
     if not request.user.is_superuser:
         messages.error(request, "Access denied.")
@@ -78,10 +83,48 @@ def admin_teacher_list(request):
     elif course or semester:
         teachers = teachers.filter(subject__in=subjects).distinct()
 
+    # ✅ Important mapping
+    teacher_subject_map = {
+        teacher.id: Subject.objects.filter(teacher=teacher) for teacher in teachers
+    }
+
     return render(request, 'teachers/admin_teacher_list.html', {
         'teachers': teachers,
         'subjects': Subject.objects.all(),
+        'teacher_subject_map': teacher_subject_map,
         'selected_course': course,
         'selected_semester': semester,
         'selected_subject': subject_id,
+    })
+
+
+# ✅ Edit Teacher (Admin Side)
+@login_required
+def edit_teacher_admin(request, pk):
+    teacher = get_object_or_404(Teacher, pk=pk)
+    if request.method == 'POST':
+        form = TeacherForm(request.POST, request.FILES, instance=teacher)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Teacher updated successfully.")
+            return redirect('admin_teacher_list')
+    else:
+        form = TeacherForm(instance=teacher)
+
+    return render(request, 'teachers/edit_teacher_admin.html', {
+        'form': form,
+        'teacher': teacher
+    })
+
+@login_required
+def delete_teacher_admin(request, pk):
+    teacher = get_object_or_404(Teacher, pk=pk)
+
+    if request.method == 'POST':
+        teacher.delete()
+        messages.success(request, "Teacher deleted successfully.")
+        return redirect('admin_teacher_list')
+
+    return render(request, 'teachers/delete_teacher_admin.html', {
+        'teacher': teacher
     })
